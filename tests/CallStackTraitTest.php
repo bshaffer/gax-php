@@ -46,7 +46,7 @@ use Google\GAX\UnitTests\Mocks\MockClientStreamingStub;
 use Google\GAX\UnitTests\Mocks\MockServerStreamingStub;
 use Google\GAX\UnitTests\Mocks\MockStub;
 use Google\GAX\UnitTests\Mocks\MockTransport;
-use Google\GAX\UnitTests\Mocks\MockGrpcStreamingTransport;
+use Google\GAX\UnitTests\Mocks\MockStreamingTransport;
 use Google\GAX\UnitTests\Mocks\MockPageStreamingRequest;
 use Google\GAX\UnitTests\Mocks\MockPageStreamingResponse;
 use Google\Longrunning\Operation;
@@ -1078,14 +1078,14 @@ class CallStackTraitTest extends PHPUnit_Framework_TestCase
 
         $callSettings = new CallSettings([]);
 
-        $transport = MockGrpcStreamingTransport::create($stub, $descriptor);
+        $transport = MockStreamingTransport::create($stub, $descriptor);
         $apiCall = $transport->createApiCall(
             'takeAction',
             $callSettings,
             ['grpcStreamingDescriptor' => $descriptor]
         );
 
-        /* @var $stream \Google\GAX\ClientStream */
+        /* @var $stream \Google\GAX\ClientStreamInterface */
         $stream = $apiCall(null, $options);
         $actualResponse = $stream->writeAllAndReadResponse([$request]);
         $this->assertEquals($response, $actualResponse);
@@ -1121,7 +1121,7 @@ class CallStackTraitTest extends PHPUnit_Framework_TestCase
         $stub = MockClientStreamingStub::create($response, $finalStatus);
 
         $callSettings = new CallSettings([]);
-        $transport = MockGrpcStreamingTransport::create($stub, $descriptor);
+        $transport = MockStreamingTransport::create($stub, $descriptor);
         $apiCall = $transport->createApiCall(
             'takeAction',
             $callSettings,
@@ -1179,7 +1179,7 @@ class CallStackTraitTest extends PHPUnit_Framework_TestCase
         $stub = MockServerStreamingStub::createWithResponseSequence($responses, null, $deserialize);
 
         $callSettings = new CallSettings([]);
-        $transport = MockGrpcStreamingTransport::create($stub, $descriptor);
+        $transport = MockStreamingTransport::create($stub, $descriptor);
         $apiCall = $transport->createApiCall(
             'takeAction',
             $callSettings,
@@ -1223,7 +1223,7 @@ class CallStackTraitTest extends PHPUnit_Framework_TestCase
         $stub = MockServerStreamingStub::createWithResponseSequence($responses);
 
         $callSettings = new CallSettings([]);
-        $transport = MockGrpcStreamingTransport::create($stub, $descriptor);
+        $transport = MockStreamingTransport::create($stub, $descriptor);
         $apiCall = $transport->createApiCall(
             'takeAction',
             $callSettings,
@@ -1262,7 +1262,7 @@ class CallStackTraitTest extends PHPUnit_Framework_TestCase
         $stub = MockServerStreamingStub::createWithResponseSequence($responses, $finalStatus);
 
         $callSettings = new CallSettings([]);
-        $transport = MockGrpcStreamingTransport::create($stub, $descriptor);
+        $transport = MockStreamingTransport::create($stub, $descriptor);
         $apiCall = $transport->createApiCall(
             'takeAction',
             $callSettings,
@@ -1313,7 +1313,7 @@ class CallStackTraitTest extends PHPUnit_Framework_TestCase
         $stub = MockBidiStreamingStub::createWithResponseSequence($responses, null, $deserialize);
 
         $callSettings = new CallSettings([]);
-        $transport = MockGrpcStreamingTransport::create($stub, $descriptor);
+        $transport = MockStreamingTransport::create($stub, $descriptor);
         $apiCall = $transport->createApiCall(
             'takeAction',
             $callSettings,
@@ -1363,7 +1363,7 @@ class CallStackTraitTest extends PHPUnit_Framework_TestCase
         $stub = MockBidiStreamingStub::createWithResponseSequence([$response]);
 
         $callSettings = new CallSettings([]);
-        $transport = MockGrpcStreamingTransport::create($stub, $descriptor);
+        $transport = MockStreamingTransport::create($stub, $descriptor);
         $apiCall = $transport->createApiCall(
             'takeAction',
             $callSettings,
@@ -1409,7 +1409,7 @@ class CallStackTraitTest extends PHPUnit_Framework_TestCase
         $stub = MockBidiStreamingStub::createWithResponseSequence($responses, $finalStatus);
 
         $callSettings = new CallSettings([]);
-        $transport = MockGrpcStreamingTransport::create($stub, $descriptor);
+        $transport = MockStreamingTransport::create($stub, $descriptor);
         $apiCall = $transport->createApiCall(
             'takeAction',
             $callSettings,
