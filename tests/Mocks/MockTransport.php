@@ -32,6 +32,7 @@
 
 namespace Google\GAX\UnitTests\Mocks;
 
+use Google\GAX\ApiException;
 use Google\GAX\CallSettings;
 use Google\GAX\CallStackTrait;
 use Google\GAX\ApiTransportInterface;
@@ -63,7 +64,12 @@ class MockTransport implements ApiTransportInterface
     {
         $handler = [$this, $method];
         $callable = function () use ($handler) {
-            return call_user_func_array($handler, func_get_args())->wait();
+            list($response, $status) = call_user_func_array($handler, func_get_args())->wait();
+            if ($status->code == \Google\Rpc\Code::OK) {
+                return $response;
+            } else {
+                throw ApiException::createFromStdClass($status);
+            }
         };
         return $this->createCallStack($callable, $settings, $options);
     }

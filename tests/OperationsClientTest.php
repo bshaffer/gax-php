@@ -42,7 +42,9 @@ use Google\GAX\Grpc\GrpcTransportTrait;
 use Google\GAX\LongRunning\OperationsClient;
 use Google\GAX\Testing\GeneratedTest;
 use Google\GAX\Testing\LongRunning\MockOperationsImpl;
+use Google\GAX\Testing\MockStubTrait;
 use Google\GAX\UnitTests\Mocks\MockOperationsGrpcTransport;
+use Google\GAX\UnitTests\Mocks\MockGrpcTransport;
 use Google\Longrunning\ListOperationsResponse;
 use Google\Longrunning\Operation;
 use Google\Protobuf\Any;
@@ -56,31 +58,14 @@ use stdClass;
  */
 class OperationsClientTest extends GeneratedTest
 {
-    public function createMockOperationsImpl($hostname, $opts)
-    {
-        return new MockOperationsImpl($hostname, $opts);
-    }
-
-    private function createTransport($callable)
-    {
-        $transport = new MockOperationsGrpcTransport([
-            'serviceAddress' => 'unknown-service-address',
-            'port' => OperationsClient::DEFAULT_SERVICE_PORT,
-            'scopes' => ['unknown-service-scopes'],
-            'createGrpcStubFunction' => $callable,
-        ]);
-
-        return $transport;
-    }
-
     /**
-     * @return OperationsClient
+     * @return MockOperationsClient
      */
-    private function createClient($createTransportFuncName, $grpcTransport, $options = [])
+    private function createClient($options = [])
     {
-        return new OperationsClient($options + [
-            $createTransportFuncName => function ($hostname, $opts) use ($grpcTransport) {
-                return $grpcTransport;
+        return new MockOperationsClient($options + [
+            'createGrpcStubFunction' => function ($hostname, $opts) {
+                return new MockOperationsImpl($hostname, $opts);
             },
             'serviceAddress' => 'unknown-service-address',
             'scopes' => ['unknown-service-scopes'],
@@ -91,9 +76,8 @@ class OperationsClientTest extends GeneratedTest
      */
     public function getOperationTest()
     {
-        $grpcTransport = $this->createTransport([$this, 'createMockOperationsImpl']);
-        $client = $this->createClient('createOperationsTransportFunction', $grpcTransport);
-        $grpcStub = $grpcTransport->getGrpcStub();
+        $client = $this->createClient();
+        $grpcStub = $client->getGrpcStub();
 
         $this->assertTrue($grpcStub->isExhausted());
 
@@ -126,9 +110,8 @@ class OperationsClientTest extends GeneratedTest
      */
     public function getOperationExceptionTest()
     {
-        $grpcTransport = $this->createTransport([$this, 'createMockOperationsImpl']);
-        $client = $this->createClient('createOperationsTransportFunction', $grpcTransport);
-        $grpcStub = $grpcTransport->getGrpcStub();
+        $client = $this->createClient();
+        $grpcStub = $client->getGrpcStub();
 
         $this->assertTrue($grpcStub->isExhausted());
 
@@ -166,9 +149,8 @@ class OperationsClientTest extends GeneratedTest
      */
     public function listOperationsTest()
     {
-        $grpcTransport = $this->createTransport([$this, 'createMockOperationsImpl']);
-        $client = $this->createClient('createOperationsTransportFunction', $grpcTransport);
-        $grpcStub = $grpcTransport->getGrpcStub();
+        $client = $this->createClient();
+        $grpcStub = $client->getGrpcStub();
 
         $this->assertTrue($grpcStub->isExhausted());
 
@@ -207,9 +189,8 @@ class OperationsClientTest extends GeneratedTest
      */
     public function listOperationsExceptionTest()
     {
-        $grpcTransport = $this->createTransport([$this, 'createMockOperationsImpl']);
-        $client = $this->createClient('createOperationsTransportFunction', $grpcTransport);
-        $grpcStub = $grpcTransport->getGrpcStub();
+        $client = $this->createClient();
+        $grpcStub = $client->getGrpcStub();
 
         $this->assertTrue($grpcStub->isExhausted());
 
@@ -248,9 +229,8 @@ class OperationsClientTest extends GeneratedTest
      */
     public function cancelOperationTest()
     {
-        $grpcTransport = $this->createTransport([$this, 'createMockOperationsImpl']);
-        $client = $this->createClient('createOperationsTransportFunction', $grpcTransport);
-        $grpcStub = $grpcTransport->getGrpcStub();
+        $client = $this->createClient();
+        $grpcStub = $client->getGrpcStub();
 
         $this->assertTrue($grpcStub->isExhausted());
 
@@ -278,9 +258,8 @@ class OperationsClientTest extends GeneratedTest
      */
     public function cancelOperationExceptionTest()
     {
-        $grpcTransport = $this->createTransport([$this, 'createMockOperationsImpl']);
-        $client = $this->createClient('createOperationsTransportFunction', $grpcTransport);
-        $grpcStub = $grpcTransport->getGrpcStub();
+        $client = $this->createClient();
+        $grpcStub = $client->getGrpcStub();
 
         $this->assertTrue($grpcStub->isExhausted());
 
@@ -318,9 +297,8 @@ class OperationsClientTest extends GeneratedTest
      */
     public function deleteOperationTest()
     {
-        $grpcTransport = $this->createTransport([$this, 'createMockOperationsImpl']);
-        $client = $this->createClient('createOperationsTransportFunction', $grpcTransport);
-        $grpcStub = $grpcTransport->getGrpcStub();
+        $client = $this->createClient();
+        $grpcStub = $client->getGrpcStub();
 
         $this->assertTrue($grpcStub->isExhausted());
 
@@ -348,9 +326,8 @@ class OperationsClientTest extends GeneratedTest
      */
     public function deleteOperationExceptionTest()
     {
-        $grpcTransport = $this->createTransport([$this, 'createMockOperationsImpl']);
-        $client = $this->createClient('createOperationsTransportFunction', $grpcTransport);
-        $grpcStub = $grpcTransport->getGrpcStub();
+        $client = $this->createClient();
+        $grpcStub = $client->getGrpcStub();
 
         $this->assertTrue($grpcStub->isExhausted());
 
@@ -381,5 +358,18 @@ class OperationsClientTest extends GeneratedTest
         // Call popReceivedCalls to ensure the stub is exhausted
         $grpcStub->popReceivedCalls();
         $this->assertTrue($grpcStub->isExhausted());
+    }
+}
+
+class MockOperationsClient extends OperationsClient
+{
+    use MockStubTrait;
+
+    public function getGrpcStub()
+    {
+        $class = new \ReflectionClass($this->operationsTransport);
+        $property = $class->getProperty('grpcStub');
+        $property->setAccessible(true);
+        return $property->getValue($this->operationsTransport);
     }
 }

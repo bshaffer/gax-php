@@ -31,6 +31,7 @@
  */
 namespace Google\GAX\Testing;
 
+use Google\GAX\ApiException;
 use UnderflowException;
 
 /**
