@@ -35,7 +35,9 @@ jobs:
                 max_attempts: 3
                 command: composer install
             - name: Run script
-              run: vendor/bin/phpunit --coverage-clover=coverage.xml
+              run: |
+                cat $GOOGLE_APPLICATION_CREDENTIALS
+                vendor/bin/phpunit --coverage-clover=coverage.xml
 
     style:
         runs-on: ubuntu-latest
