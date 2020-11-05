@@ -19,7 +19,10 @@ DOCTUM_CONFIG=${ROOT_DIR}/dev/src/Docs/doctum-config.php
 
 # Construct the base index file that redirects to the latest version
 # of the docs. This will only be generated when GITHUB_REF is set.
-GITHUB_TAG=${GITHUB_REF#refs/tags/}
+if [[ $GITHUB_REF == refs/tags/* ]]; then
+  GITHUB_TAG=${GITHUB_REF#refs/tags/}
+fi
+
 UPDATED_INDEX_FILE=$(cat << EndOfMessage
 <html><head><script>window.location.replace('/gax-php/${GITHUB_TAG}/' + location.hash.substring(1))</script></head><body></body></html>
 EndOfMessage
