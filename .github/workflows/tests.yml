@@ -33,10 +33,9 @@ jobs:
                 max_attempts: 3
                 command: composer install
             - name: Run script
-              run: |
-                echo "GOOGLE_APPLICATION_CREDENTIALS=${GITHUB_WORKSPACE}/testing/testdata/json-key-file.json" >> $GITHUB_ENV
-                echo $GOOGLE_APPLICATION_CREDENTIALS
-                vendor/bin/phpunit --coverage-clover=coverage.xml
+              env:
+                GOOGLE_APPLICATION_CREDENTIALS: ${{env.GITHUB_WORKSPACE}}/testing/testdata/json-key-file.json" >> $GITHUB_ENV
+              run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
     style:
         runs-on: ubuntu-latest
