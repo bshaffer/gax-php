@@ -34,7 +34,7 @@ jobs:
                 command: composer install
             - name: Run script
               run: |
-                export GOOGLE_APPLICATION_CREDENTIALS=$GITHUB_WORKSPACE/testing/testdata/json-key-file.json
+                echo "::set-env name=GOOGLE_APPLICATION_CREDENTIALS::${GITHUB_WORKSPACE}/testing/testdata/json-key-file.json"
                 vendor/bin/phpunit --coverage-clover=coverage.xml
 
     style:
