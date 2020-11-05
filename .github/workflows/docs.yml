@@ -24,9 +24,12 @@ jobs:
             GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           with:
             entrypoint: ./dev/sh/build-docs.sh
+        - run: |
+            git submodule add -q -f -b gh-pages https://${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY} ghpages
+            rsync -aP tmp_gh-pages/* ghpages/
         - name: Deploy 🚀
           uses: JamesIves/github-pages-deploy-action@releases/v3
           with:
             ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
             BRANCH: gh-pages
-            FOLDER: .
+            FOLDER: ghpages
