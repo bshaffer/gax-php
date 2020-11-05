@@ -17,8 +17,7 @@ jobs:
                     extensions: "protobuf"
                   - php: 7.4
                     extensions: "protobuf"
-
-        name: "PHP ${{ matrix.php }} Unit Test (${{ matrix.extensions }}")
+        name: "PHP ${{ matrix.php }} Unit Test ${{ matrix.extensions }}"
         steps:
             - uses: actions/checkout@v2
             - uses: codecov/codecov-action@v1
