@@ -12,12 +12,15 @@ jobs:
         strategy:
             matrix:
                 php: [ 5.5, 5.6, "7.0", 7.1, 7.2, 7.3 ]
-                extensions: [""]
+                extensions: []
+                tools: []
                 include:
                   - php: 5.6
-                    extensions: "protobuf,grpc"
+                    extensions: "protobuf-3.12.2,grpc"
+                    tools: "pecl"
                   - php: 7.3
-                    extensions: "protobuf,grpc"
+                    extensions: "protobuf-3.12.2,grpc"
+                    tools: "pecl"
         name: "PHP ${{ matrix.php }} Unit Test ${{ matrix.extensions }}"
         steps:
             - uses: actions/checkout@v2
@@ -26,7 +29,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php }}
-                tools: pecl
+                tools: ${{ matrix.tools }}
                 extensions: bcmath,${{ matrix.extensions }}
             - name: Install composer dependencies
               uses: nick-invision/retry@v1
