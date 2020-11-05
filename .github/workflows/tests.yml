@@ -11,14 +11,14 @@ jobs:
         strategy:
             matrix:
                 php: [ 5.5, 5.6, "7.0", 7.1, 7.2, 7.3, 7.4 ]
-                extensions: ["grpc"]
+                extensions: [false]
                 include:
                   - php: 5.6
-                    extensions: "grpc,protobuf"
+                    extensions: "protobuf"
                   - php: 7.4
-                    extensions: "grpc,protobuf"
+                    extensions: "protobuf"
 
-        name: "PHP ${{ matrix.php }} Unit Test (${{ matrix.extensions }}"
+        name: "PHP ${{ matrix.php }} Unit Test (${{ matrix.extensions }}")
         steps:
             - uses: actions/checkout@v2
             - uses: codecov/codecov-action@v1
@@ -26,7 +26,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php }}
-                extensions: ${{ matrix.extensions }}
+                extensions: grpc,bcmath,${{ matrix.extensions }}
             - name: Install composer dependencies
               uses: nick-invision/retry@v1
               with:
