@@ -38,8 +38,20 @@ jobs:
                 max_attempts: 3
                 command: composer install
             - name: Run script
-              run: |
-                vendor/bin/phpunit --coverage-clover=coverage.xml
+              run: vendor/bin/phpunit --coverage-clover=coverage.xml
+
+    test_composer_conflict:
+        runs-on: ubuntu-latest
+        name: "Composer Conflict Test"
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: 7.2
+                extensions: protobuf-3.6.1
+            - name: Run script
+              run: dev/sh/test-composer-conflict.sh
 
     style:
         runs-on: ubuntu-latest
