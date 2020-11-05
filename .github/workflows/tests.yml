@@ -5,7 +5,7 @@ on:
       - master
   pull_request:
 env:
-  GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GITHUB_WORKSPACE }}/testing/testdata/json-key-file.json
+  GOOGLE_APPLICATION_CREDENTIALS: $GITHUB_WORKSPACE/testing/testdata/json-key-file.json
 jobs:
     test:
         runs-on: ubuntu-latest
