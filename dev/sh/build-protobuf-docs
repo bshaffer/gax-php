@@ -1,0 +1,86 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+/**
+ * Time to parse arguments...
+ */
+
+$arguments = $argv;
+array_shift($arguments);
+
+/**
+ * Let's re-index the arguments array.
+ */
+$arguments = array_values($arguments);
+
+$positional = [];
+
+$named = [
+    'lt' => '%c.md',
+    'index' => 'ApiIndex.md',
+];
+
+for ($i = 0; $i < count($arguments); $i++) {
+    if (substr($arguments[$i], 0, 2) === '--') {
+        $named[substr($arguments[$i], 2)] = $arguments[$i + 1];
+        $i++;
+    } else {
+        $positional[] = $arguments[$i];
+    }
+}
+
+if (count($positional) < 1) {
+    $usage = <<<EOF
+PHPDocumentor Markdown Generator
+
+Usage:
+
+    # First generate a structure.xml file with phpdocumentor.
+    # This command will generate structure.xml in the docs directry
+    phpdoc -d [project path] -t docs/ --template="xml"
+
+    # Next, run this command:
+    build-protobuf-docs docs/structure.xml [outputdir]
+
+Options:
+
+    --lt [template]
+        This specifies the 'template' for links we're generating. By default
+        this is "%c.md".
+
+
+EOF;
+    die($usage);
+}
+
+$input = $positional[0];
+
+$outputDir = '.';
+
+if (isset($positional[1])) {
+    $outputDir = $positional[1];
+}
+
+$parser = new Google\ApiCore\Dev\Docs\Parser($input);
+
+echo "Parsing structure.xml\n";
+
+$classDefinitions = $parser->run();
+
+$templateDir = dirname(__DIR__) . '/templates/';
+
+$generator = new Google\ApiCore\Dev\Docs\Generator(
+    $classDefinitions,
+    $outputDir,
+    $templateDir,
+    $named['lt'],
+    $named['index']
+);
+
+echo "Generating pages\n";
+
+$generator->run();
+
+echo "Complete\n";
